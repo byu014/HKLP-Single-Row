@@ -125,7 +125,7 @@ class FakePlateGenerator():
 if __name__ == "__main__":
     fake_resource_dir  = sys.path[0] + "/fake_resource/" 
     output_dir = sys.path[0] + "/test_plate/"
-    img_size = (100, 30)
+    img_size = (300, 90)#100,30
 
     fake_plate_generator = FakePlateGenerator(fake_resource_dir, img_size)
     reset_folder(output_dir)
