@@ -9,24 +9,24 @@ import cv2
 from img_utils import *
 from jittering_methods import *
 
-class FakePlateGenerator():
-    def __init__(self, fake_resource_dir, plate_size):
-        chinese_dir = fake_resource_dir + "/chinese/"
-        number_dir = fake_resource_dir + "/numbers/" 
-        letter_dir = fake_resource_dir + "/letters/" 
-        plate_dir = fake_resource_dir + "/plate_background_use/"
+fake_resource_dir  = sys.path[0] + "/fake_resource/" 
+output_dir = sys.path[0] + "/test_plate/"
+number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/" ]
+letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/"]
+plate_dir = fake_resource_dir + "/plate_background_use/"
 
-        # character_y_size = 113
-        character_y_size = 100
-        plate_y_size = 164
+# character_y_size = 113
+character_y_size = 100
+plate_y_size = 164
+
+class FakePlateGenerator():
+    def __init__(self, plate_size):
 
         self.dst_size = plate_size
 
-        self.chinese = self.load_image(chinese_dir, character_y_size)
-        self.numbers = self.load_image(number_dir, character_y_size)
-        self.letters = self.load_image(letter_dir, character_y_size)
-        # self.numbers = self.load_imageInv(number_dir, character_y_size)
-        # self.letters = self.load_imageInv(letter_dir, character_y_size)
+        #self.chinese = self.load_image(chinese_dir, character_y_size)
+        self.numbers = self.load_image(number_dir[0], character_y_size)
+        self.letters = self.load_image(letter_dir[0], character_y_size)
 
         self.numbers_and_letters = dict(self.numbers, **self.letters)
 
@@ -123,14 +123,18 @@ class FakePlateGenerator():
         return plate_img, plate_name
 
 if __name__ == "__main__":
-    fake_resource_dir  = sys.path[0] + "/fake_resource/" 
-    output_dir = sys.path[0] + "/test_plate/"
+    # fake_resource_dir  = sys.path[0] + "/fake_resource/" 
+    # output_dir = sys.path[0] + "/test_plate/"
     img_size = (300, 90)#100,30
 
-    fake_plate_generator = FakePlateGenerator(fake_resource_dir, img_size)
+    fake_plate_generator = FakePlateGenerator( img_size)
     reset_folder(output_dir)
     numImgs = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
     for i in range(0, numImgs):
+        #random choose fonts
+        font = random.randint(0,1)
+        fake_plate_generator.numbers = fake_plate_generator.load_image(number_dir[font], character_y_size)
+        fake_plate_generator.letters = fake_plate_generator.load_image(letter_dir[font], character_y_size)
         plate, plate_name = fake_plate_generator.generate_one_plate()
         plate = jittering_color(plate)
         plate = add_noise(plate)
