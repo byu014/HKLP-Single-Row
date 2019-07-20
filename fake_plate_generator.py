@@ -15,9 +15,11 @@ number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/" ]
 letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/"]
 plate_dir = fake_resource_dir + "/plate_background_use/"
 
-# character_y_size = 113
-character_y_size = 100
-plate_y_size = 164
+
+# character_y_size = 100
+character_y_size = 110
+plate_y_size = 150
+# plate_y_size = 164
 
 class FakePlateGenerator():
     def __init__(self, plate_size):
@@ -37,7 +39,7 @@ class FakePlateGenerator():
             self.plates[i] = cv2.cvtColor(self.plates[i], cv2.COLOR_BGR2BGRA)
 
         #positions 
-        self.character_position_x_listStart = [80,110, 140,170]
+        self.character_position_x_listStart = [60,90, 120,150]
         self.character_position_x_listRest = [] 
     
     def get_radom_sample(self, data):
@@ -99,7 +101,7 @@ class FakePlateGenerator():
         self.character_position_x_listRest = [] 
         for j in range(2,7):
             self.character_position_x_listRest.append(self.character_position_x_listStart[i] + (j*60))
-        # self.character_position_x_list = [x.__sub__(10) for x in self.character_position_x_listStart]
+        self.character_position_x_listRest = [x.__sub__(20) for x in self.character_position_x_listRest]
 
         #makes sure first digit does not start with a 0
         while True:
