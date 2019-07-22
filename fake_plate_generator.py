@@ -13,8 +13,7 @@ fake_resource_dir  = sys.path[0] + "/fake_resource/"
 output_dir = sys.path[0] + "/test_plate/"
 number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/" ]
 letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/"]
-plate_dir = [fake_resource_dir + "/plate_background_use/", fake_resource_dir + "/plate_background_use1/"]
-screw_dir = [fake_resource_dir + "/screw", fake_resource_dir + "/screw1"]
+plate_dir = fake_resource_dir + "/plate_background_use/"
 
 
 # character_y_size = 100
@@ -34,8 +33,7 @@ class FakePlateGenerator():
         self.numbers_and_letters = dict(self.numbers, **self.letters)
 
         #we only use blue plate here
-        self.plates = self.load_image(plate_dir[0], plate_y_size)
-        self.screw = self.load_image(screw_dir[0],plate_y_size)
+        self.plates = self.load_image(plate_dir, plate_y_size)
     
         for i in self.plates.keys():
             self.plates[i] = cv2.cvtColor(self.plates[i], cv2.COLOR_BGR2BGRA)
@@ -137,11 +135,8 @@ if __name__ == "__main__":
     for i in range(0, numImgs):
         #random choose fonts
         font = random.randint(0,1)
-        color = random.randint(0,1)
         fake_plate_generator.numbers = fake_plate_generator.load_image(number_dir[font], character_y_size)
         fake_plate_generator.letters = fake_plate_generator.load_image(letter_dir[font], character_y_size)
-        fake_plategenerator.plate_dir = fake_plate_generator.load_image(plate_dir[color],character_y_size)
-        screw_dir = fake_plate_generator.load_image(screw_dir[color],character_y_size)
         plate, plate_name = fake_plate_generator.generate_one_plate()
         plate = jittering_color(plate)
         plate = add_noise(plate)
