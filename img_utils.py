@@ -10,19 +10,64 @@ import shutil
 import time
 
 def reset_folder(path):
-    #  try:
-    #      shutil.rmtree(path)
-    #  except:
-    #       pass
+     try:
+         shutil.rmtree(path)
+     except:
+          pass
     
-    #  time.sleep(1)     
+     time.sleep(1)     
      
      try:
          os.mkdir(path)
      except:
           pass
 
-def add_noise(img, strenth = 4):
+def warpPerspective(src, M33, sl, gpu):
+    if gpu:
+        from libs.gpu.GpuWrapper import cudaWarpPerspectiveWrapper
+        dst = cudaWarpPerspectiveWrapper(src.astype(np.uint8), M33, (sl, sl), cv2.INTER_CUBIC)
+    else:
+        dst = cv2.warpPerspective(src, M33, (sl, sl), flags=cv2.INTER_CUBIC)
+    return dst
+
+def emboss(img):
+    kernel = np.array([
+            [-1.5, 0, 0],
+            [0, 1.5, 0],
+            [0, 0, 0]
+        ])
+    return cv2.filter2D(img, -1, kernel)
+
+def perspectiveTransform(img):
+    # if random.randint(0,5) >= 1:
+    #     return img
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2RGBA)
+    rotationMatrix = cv2.getRotationMatrix2D((random.randint(0,img.shape[1]), random.randint(0,img.shape[1])), random.randint(-5,5), 1)
+    img = cv2.warpAffine(img, rotationMatrix, (img.shape[1], img.shape[0]) ,borderMode=cv2.BORDER_CONSTANT, borderValue = [0, 0, 0, 0])
+    warp1 = random.randint(-1,1) * (1 / (1 + math.exp(-random.randint(-20,-8))))
+    warp2 = random.randint(-1,1) * (1 / (1 + math.exp(-random.randint(-20,-8))))
+    M = np.float32([[1,0,0],
+                    [0,1,0],
+                    [warp1,warp2,1]])
+    img = cv2.warpPerspective(img,M,(300,90),borderMode=cv2.BORDER_CONSTANT, borderValue = [0, 0, 0, 0])
+
+    return img
+    
+
+def invertColor(img,invert=False):
+    if invert == False and random.randint(0,20)  >= 5:
+        return img
+    img = cv2.bitwise_not(img)
+    return img
+
+def underline(img):
+    if random.randint(0,1) == 0:
+        return img
+    lineThickness = 2
+    img = cv2.line(img, (-10, 80), (310, 80), (255,255,255), lineThickness)
+    return img
+
+def add_noise(img, strenth = 10):#4
     out = img.astype(np.float64)
     out /= 255.0
 

@@ -7,13 +7,15 @@ import numpy as np
 import cv2
 import uuid
 
-def jittering_blur(img, max_sigma = 0.8):
+def jittering_blur(img, max_sigma = 5):#.8
     kernel_list = [3, 5, 7, 11]
     kernel = random.choice(kernel_list)
     sigma = random.uniform(0, max_sigma)
+    img = cv2.resize(img,(100,30))
+    img = cv2.resize(img,(300,90))
     return  cv2.GaussianBlur(img, (kernel,kernel), sigma)   
 
-def jittering_color(img, h1 = 90, h2 = 115, s1 = 40, s2 = 100, v1 = 50, v2 = 100):
+def jittering_color(img, h1 = 90, h2 = 100, s1 = 90, s2 = 100, v1 = 90, v2 = 100):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     hsv = hsv.astype(np.float64)
 
