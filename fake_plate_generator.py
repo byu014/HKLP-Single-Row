@@ -13,7 +13,8 @@ fake_resource_dir  = sys.path[0] + "/fake_resource/"
 output_dir = sys.path[0] + "/test_plate/"
 number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/" ]
 letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/"]
-plate_dir = fake_resource_dir + "/plate_background_use/"
+plate_dir = [fake_resource_dir + "/plate_background_use/" ,fake_resource_dir + "/plate_background_use1/"]
+screw_dir = [fake_resource_dir + "/screw/",fake_resource_dir + "/screw1/"]
 
 
 # character_y_size = 100
@@ -23,17 +24,19 @@ plate_y_size = 150
 
 class FakePlateGenerator():
     def __init__(self, plate_size):
-
+        font = random.randint(0,1)
+        color = random.randint(0,1)
         self.dst_size = plate_size
 
         #self.chinese = self.load_image(chinese_dir, character_y_size)
-        self.numbers = self.load_image(number_dir[0], character_y_size)
-        self.letters = self.load_image(letter_dir[0], character_y_size)
+        self.numbers = self.load_image(number_dir[font], character_y_size)
+        self.letters = self.load_image(letter_dir[font], character_y_size)
 
         self.numbers_and_letters = dict(self.numbers, **self.letters)
 
         #we only use blue plate here
-        self.plates = self.load_image(plate_dir, plate_y_size)
+        self.plates = self.load_image(plate_dir[color], plate_y_size)
+        self.screws = self.load_screws(screw_dir[color],plate_y_size)
     
         for i in self.plates.keys():
             self.plates[i] = cv2.cvtColor(self.plates[i], cv2.COLOR_BGR2BGRA)
@@ -67,6 +70,18 @@ class FakePlateGenerator():
             img_list[filename[:-4]] = img_scaled
 
         return img_list
+    
+    def load_screws(self, path, dst_y_size):
+        img_list = {}
+        current_path = sys.path[0]
+
+        listfile = os.listdir(path)     
+
+        for filename in listfile:
+            img = cv2.imread(path + filename, -1)
+            img_list[filename[:-4]] = img
+
+        return img_list
 
     def add_character_to_plate(self, character, plate, x):
         h_plate, w_plate = plate.shape[:2]
@@ -78,6 +93,17 @@ class FakePlateGenerator():
         a_channel = cv2.split(character)[3]
         ret, mask = cv2.threshold(a_channel, 100, 255, cv2.THRESH_BINARY)
         character = emboss(character)
+        overlay_img(character, plate, mask, start_x, start_y)
+    
+    def add_screws_to_plate(self, character, plate, x):
+        h_plate, w_plate = plate.shape[:2]
+        h_character, w_character = character.shape[:2]
+
+        start_x = x - int(w_character/2)
+        start_y = 10
+
+        a_channel = cv2.split(character)[3]
+        ret, mask = cv2.threshold(a_channel, 100, 255, cv2.THRESH_BINARY)
         overlay_img(character, plate, mask, start_x, start_y)
 
     def generate_one_plate(self):
@@ -115,6 +141,9 @@ class FakePlateGenerator():
             character, img =  self.get_radom_sample(self.numbers)
             self.add_character_to_plate(img, plate_img, self.character_position_x_listRest[j-2])
             plate_name += character
+        screw, img = self.get_radom_sample(self.screws)
+        self.add_screws_to_plate(img, plate_img, 110)
+        self.add_screws_to_plate(img, plate_img, 350)
 
         #转换为RBG三通道
         plate_img = cv2.cvtColor(plate_img, cv2.COLOR_BGRA2BGR)
@@ -129,20 +158,16 @@ if __name__ == "__main__":
     # output_dir = sys.path[0] + "/test_plate/"
     img_size = (300, 90)#100,30
 
-    fake_plate_generator = FakePlateGenerator( img_size)
     reset_folder(output_dir)
     numImgs = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
     for i in range(0, numImgs):
-        #random choose fonts
-        font = random.randint(0,1)
-        fake_plate_generator.numbers = fake_plate_generator.load_image(number_dir[font], character_y_size)
-        fake_plate_generator.letters = fake_plate_generator.load_image(letter_dir[font], character_y_size)
+        fake_plate_generator = FakePlateGenerator( img_size)
         plate, plate_name = fake_plate_generator.generate_one_plate()
+        plate = underline(plate)
         plate = jittering_color(plate)
         plate = add_noise(plate)
         plate = jittering_blur(plate)
         plate = jittering_scale(plate)
         #plate = invertColor(plate)
-        plate = underline(plate)
         plate = perspectiveTransform(plate)
         save_random_img(output_dir, plate)
