@@ -115,18 +115,18 @@ class FakePlateGenerator():
 
         # i = (len(self.character_position_x_list) - num)//2 - 1
         i = 6 - num
-        spacing = random.randint(55,65) #60 for normal spacing
+        #spacing = random.randint(55,65) #60 for normal spacing
         character, img = self.get_radom_sample(self.letters)
         self.add_character_to_plate(img, plate_img, self.character_position_x_listStart[i])
         plate_name += "%s"%(character,)
 
         character, img = self.get_radom_sample(self.letters)
-        self.add_character_to_plate(img, plate_img, self.character_position_x_listStart[i]+spacing)
+        self.add_character_to_plate(img, plate_img, self.character_position_x_listStart[i]+60)
         plate_name += "%s"%(character,)
 
         self.character_position_x_listRest = [] 
         for j in range(2,7):
-            self.character_position_x_listRest.append(self.character_position_x_listStart[i] + (j*spacing))
+            self.character_position_x_listRest.append(self.character_position_x_listStart[i] + (j*60))
         self.character_position_x_listRest = [x.__sub__(20) for x in self.character_position_x_listRest]
 
         #makes sure first digit does not start with a 0
