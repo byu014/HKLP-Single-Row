@@ -175,5 +175,5 @@ if __name__ == "__main__":
         plate = resample(plate, resample_range)
         plate = jittering_scale(plate)
         #plate = invertColor(plate)
-        plate = perspectiveTransform(plate)
+        # plate = perspectiveTransform(plate)
         save_random_img(output_dir, plate)
