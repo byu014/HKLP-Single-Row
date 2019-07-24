@@ -8,9 +8,14 @@ import cv2
 
 from img_utils import *
 from jittering_methods import *
+from parse_args import parse_args
 
+args = parse_args()
 fake_resource_dir  = sys.path[0] + "/fake_resource/" 
-output_dir = sys.path[0] + "/test_plate/"
+output_dir = args.img_dir
+resample_range = args.resample 
+gaussian_range = args.gaussian 
+noise_range = args.noise
 number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/" ]
 letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/"]
 plate_dir = [fake_resource_dir + "/plate_background_use/" ,fake_resource_dir + "/plate_background_use1/"]
@@ -159,14 +164,15 @@ if __name__ == "__main__":
     img_size = (300, 90)#100,30
 
     reset_folder(output_dir)
-    numImgs = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
+    numImgs = args.num_imgs
     for i in range(0, numImgs):
         fake_plate_generator = FakePlateGenerator( img_size)
         plate, plate_name = fake_plate_generator.generate_one_plate()
         plate = underline(plate)
         plate = jittering_color(plate)
-        plate = add_noise(plate)
-        plate = jittering_blur(plate)
+        plate = add_noise(plate,noise_range)
+        plate = jittering_blur(plate,gaussian_range)
+        plate = resample(plate, resample_range)
         plate = jittering_scale(plate)
         #plate = invertColor(plate)
         plate = perspectiveTransform(plate)
