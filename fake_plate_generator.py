@@ -16,6 +16,9 @@ output_dir = args.img_dir
 resample_range = args.resample 
 gaussian_range = args.gaussian 
 noise_range = args.noise
+rank_blur = args.rank_blur
+brightness = args.brightness
+motion_blur = args.motion_blur
 number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/" ]
 letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/"]
 plate_dir = [fake_resource_dir + "/plate_background_use/" ,fake_resource_dir + "/plate_background_use1/"]
@@ -176,4 +179,7 @@ if __name__ == "__main__":
         plate = jittering_scale(plate)
         #plate = invertColor(plate)
         # plate = perspectiveTransform(plate)
+        plate = random_rank_blur(plate,rank_blur)
+        plate = random_motion_blur(plate,motion_blur)
+        plate = random_brightness(plate, brightness)
         save_random_img(output_dir, plate)
