@@ -121,7 +121,7 @@ class FakePlateGenerator():
         _, plate_img = self.get_radom_sample(self.plates)
         plate_name = ""
 
-        num = random.randint(3, 102)#6
+        num = random.randint(3, 30)#6
         num = 6 if num >= 6 else num
 
         # i = (len(self.character_position_x_list) - num)//2 - 1
@@ -152,7 +152,7 @@ class FakePlateGenerator():
                 break
 
         for j in range(4,num+1):
-            character, img =  self.get_radom_sample(self.numbers)
+            character, img =  self.get_radom_sample(self.numbers_and_letters)
             self.add_character_to_plate(img, plate_img, self.character_position_x_listRest[j-2])
             plate_name += character
             plate_chars += character
