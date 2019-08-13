@@ -171,7 +171,7 @@ class FakePlateGenerator():
 def write_to_txt(fo,img_name, plate_characters):
     plate_label = '|' + '|'.join(plate_characters) + '|'
     line = img_name + ';' + plate_label.upper() + '\n'
-    line.encode('utf8')
+    print line.encode('utf8')
     fo.write("%s" % line)
 
 
@@ -184,6 +184,8 @@ if __name__ == "__main__":
     numImgs = args.num_imgs
     fo = codecs.open(output_dir + 'labels.txt', "w", encoding='utf-8')
     for i in range(0, numImgs):
+        if i % 100 == 0:
+            print i
         fake_plate_generator = FakePlateGenerator( img_size)
         plate, plate_name, plate_chars = fake_plate_generator.generate_one_plate()
         plate = underline(plate)
