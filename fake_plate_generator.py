@@ -216,7 +216,7 @@ def json_generator(json_file, fname, plate_chars,box,json_data):
         "text": plate_chars,}
     )
     if fname not in json_data:
-        json_data[fname.split('/')[7]] = plate_anno
+        json_data[fname.split('/')[len(fname.split('/'))-1]] = plate_anno
 
 
 if __name__ == "__main__":
