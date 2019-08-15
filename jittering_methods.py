@@ -9,7 +9,7 @@ import uuid
 from PIL import Image, ImageFilter, ImageEnhance
 
 def resample(img, resizeRange):
-    resizer = random.randint(3,resizeRange)
+    resizer = random.randint(1,resizeRange)
     if resizer > 0:
         h,w = img.shape[0:2]
         img = cv2.resize(img,(img.shape[1]//resizer,img.shape[0]//resizer))
@@ -17,9 +17,9 @@ def resample(img, resizeRange):
     return img
 
 def jittering_blur(img, max_sigma):#.8
-    kernel_list = [3, 5, 7, 11]
+    kernel_list = [3, 5, 7]
     kernel = random.choice(kernel_list)
-    sigma = random.uniform(15, max_sigma)
+    sigma = random.uniform(5, max_sigma)#15
     return  cv2.GaussianBlur(img, (kernel,kernel), sigma)   
 
 def jittering_color(img, h1 = 90, h2 = 100, s1 = 90, s2 = 100, v1 = 90, v2 = 100):

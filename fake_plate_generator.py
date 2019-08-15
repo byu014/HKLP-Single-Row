@@ -55,7 +55,7 @@ class FakePlateGenerator():
             self.plates[i] = cv2.cvtColor(self.plates[i], cv2.COLOR_BGR2BGRA)
 
         #positions 
-        self.character_position_x_listStart = [60,90, 120,150]
+        self.character_position_x_listStart = [60+30,90+30, 120+30,150+30]
         self.character_position_x_listRest = [] 
     
     def get_radom_sample(self, data):
@@ -179,8 +179,8 @@ class FakePlateGenerator():
             plate_name += character
             plate_chars += character
         screw, img = self.get_radom_sample(self.screws)
-        self.add_screws_to_plate(img, plate_img, 110)
-        self.add_screws_to_plate(img, plate_img, 350)
+        self.add_screws_to_plate(img, plate_img, 110+20)
+        self.add_screws_to_plate(img, plate_img, 350+20)
 
         #转换为RBG三通道
         plate_img = cv2.cvtColor(plate_img, cv2.COLOR_BGRA2BGR)
@@ -224,7 +224,7 @@ if __name__ == "__main__":
     # output_dir = sys.path[0] + "/test_plate/"
     json_data = {}
     img_size = (300, 90)#100,30
-    json_file = sys.path[0]+"/ocr_label.json"
+    json_file = output_dir + "/ocr_label.json"
     reset_folder(output_dir)
     numImgs = args.num_imgs
     fo = codecs.open(output_dir + 'labels.txt', "w", encoding='utf-8')
