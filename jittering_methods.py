@@ -19,7 +19,7 @@ def resample(img, resizeRange):
 def jittering_blur(img, max_sigma):#.8
     kernel_list = [3, 5, 7, 11]
     kernel = random.choice(kernel_list)
-    sigma = random.uniform(15, max_sigma)
+    sigma = random.uniform(0, max_sigma)
     return  cv2.GaussianBlur(img, (kernel,kernel), sigma)   
 
 def jittering_color(img, h1 = 90, h2 = 100, s1 = 90, s2 = 100, v1 = 90, v2 = 100):
@@ -72,7 +72,7 @@ def random_rank_blur(img, rank_blur_range):
 def random_motion_blur(img, motion_blur_range):
     img_array = img
     angle = np.random.randint(0, 360)
-    motion_blur_range = np.random.randint(2, motion_blur_range)
+    motion_blur_range = np.random.randint(1, motion_blur_range)
     M = cv2.getRotationMatrix2D((motion_blur_range / 2, motion_blur_range / 2), angle, 1)
     motion_blur_kernel = np.diag(np.ones(motion_blur_range))
     motion_blur_kernel = cv2.warpAffine(motion_blur_kernel, M, (motion_blur_range, motion_blur_range))
