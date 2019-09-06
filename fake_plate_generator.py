@@ -22,8 +22,8 @@ noise_range = args.noise
 rank_blur = args.rank_blur
 brightness = args.brightness
 motion_blur = args.motion_blur
-number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/",fake_resource_dir + "/numbers2/" , fake_resource_dir + "/numbers3/"]
-letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/",fake_resource_dir + "/letters2/" , fake_resource_dir + "/letters3/"]
+number_dir = [fake_resource_dir + "/numbers/",fake_resource_dir + "/numbers1/",fake_resource_dir + "/numbers2/" , fake_resource_dir + "/numbers3/",fake_resource_dir + "/numbers4/" ]
+letter_dir = [fake_resource_dir + "/letters/" ,fake_resource_dir + "/letters1/",fake_resource_dir + "/letters2/" , fake_resource_dir + "/letters3/", fake_resource_dir + "/letters4/"]
 plate_dir = [fake_resource_dir + "/plate_background_use/" ,fake_resource_dir + "/plate_background_use1/"]
 screw_dir = [fake_resource_dir + "/screw/",fake_resource_dir + "/screw1/"]
 
@@ -35,7 +35,7 @@ plate_y_size = 150
 
 class FakePlateGenerator():
     def __init__(self, plate_size):
-        font = random.randint(0,3)
+        font = random.randint(0,4)
         color = 1#random.randint(0,1)
         self.dst_size = plate_size
 
@@ -142,8 +142,8 @@ class FakePlateGenerator():
         #makes sure first digit does not start with a 0
 
         screw, img = self.get_radom_sample(self.screws)
-        self.add_screws_to_plate(img, plate_img, 110)
-        self.add_screws_to_plate(img, plate_img, 350)
+        self.add_screws_to_plate(img, plate_img, 70)#110
+        self.add_screws_to_plate(img, plate_img, 400)#350
 
         #转换为RBG三通道
         plate_img = cv2.cvtColor(plate_img, cv2.COLOR_BGRA2BGR)
